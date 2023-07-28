@@ -1,24 +1,24 @@
 package dev.android.hitanshu_dhawan_mccompose.ui.home
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
-import androidx.compose.runtime.Composable
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import dev.android.hitanshu_dhawan_mccompose.R
 import dev.android.hitanshu_dhawan_mccompose.data.HomeRepository
 import dev.android.hitanshu_dhawan_mccompose.ui.components.SearchBar
 import dev.android.hitanshu_dhawan_mccompose.ui.components.SpotlightCard
+
 import dev.android.hitanshu_dhawan_mccompose.ui.theme.Hitanshudhawan_McComposeTheme
 
 @Composable
@@ -28,14 +28,30 @@ fun HomeScreen(
 ) {
 
     val data = HomeRepository.getHomeData()
-
+    var isDarkTheme by remember { mutableStateOf(true) }
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "McDonald's") }
-            )
+                title = {
+                    Text(text = "McDonald's")
+                },
+               actions = {
+                    IconButton(onClick = ) {
+                        Icon( painter = when (isSystemInDarkTheme()) {
+                            true -> painterResource(id = R.drawable.ic_bulb_off)
+                            false -> painterResource(id = R.drawable.ic_bulb_on)
+                        },
+                            contentDescription = stringResource(R.string.text_bulb_turn_on),
+                        )
+                    }
+                },
+
+
+
+                )
         }
-    )  { paddingValues ->
+    )
+             { paddingValues ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(paddingValues)
         ) {
@@ -125,7 +141,7 @@ private fun HomeScreenPreview() {
         )
     }
 }
-
+/*
 @Preview("HomeScreen • Dark")
 @Composable
 private fun HomeScreenDarkPreview() {
@@ -136,3 +152,4 @@ private fun HomeScreenDarkPreview() {
         )
     }
 }
+*/

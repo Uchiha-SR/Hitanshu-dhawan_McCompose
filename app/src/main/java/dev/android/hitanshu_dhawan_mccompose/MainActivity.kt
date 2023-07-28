@@ -1,43 +1,64 @@
 package dev.android.hitanshu_dhawan_mccompose
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import dev.android.hitanshu_dhawan_mccompose.ui.DetailsScreen
+import dev.android.hitanshu_dhawan_mccompose.ui.home.HomeScreen
+import dev.android.hitanshu_dhawan_mccompose.ui.menu.MenuScreen
 import dev.android.hitanshu_dhawan_mccompose.ui.theme.Hitanshudhawan_McComposeTheme
 
-class MainActivity : ComponentActivity() {
+
+
+@ExperimentalAnimationApi
+class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
-            Hitanshudhawan_McComposeTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Android")
+            Hitanshudhawan_McComposeTheme(lightTheme = true) {
+
+                val navController = rememberNavController()
+
+                NavHost(navController, startDestination = "home") {
+
+                    composable("home") {
+                        HomeScreen(
+                            onCategoryClick = { navController.navigate("menu") },
+                            onMenuItemClick = { navController.navigate("menu") },
+                        )
+                    }
+
+                    composable("menu") {
+                        MenuScreen(
+                            onBackClick = { navController.navigateUp() },
+                            onMenuItemClick = { menuItemId ->
+                                navController.navigate("details/$menuItemId")
+                            },
+                        )
+                    }
+
+                    composable(
+                        "details/{menuItemId}",
+                        arguments = listOf(navArgument("menuItemId") { type = NavType.LongType })
+                    ) { backStackEntry ->
+                        DetailsScreen(
+                            menuItemId = backStackEntry.arguments!!.getLong("menuItemId"),
+                            onBackClick = { navController.navigateUp() }
+                        )
+                    }
+
                 }
+
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    Hitanshudhawan_McComposeTheme {
-        Greeting("Android")
     }
 }
